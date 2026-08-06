@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build on macOS
-    runs-on: macos-14 # GitHub 提供的 macOS runner（Xcode 15+, iOS 17 SDK）
+    runs-on: macos-15 # GitHub 提供的 macOS runner（Xcode 16+, iOS 18 SDK）
 
     steps:
       # 1. 拉取代码
@@ -30,10 +30,10 @@ jobs:
           echo "Generated project files:"
           ls -la WeddingPrep.xcodeproj/
 
-      # 4. 选择 Xcode 版本
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
-        continue-on-error: true # 如果指定版本不存在，使用默认版本
+      # 4. 列出可用 Xcode 版本（调试用）
+      - name: List available Xcode versions
+        run: ls /Applications/ | grep Xcode
+        continue-on-error: true
 
       # 5. 列出可用模拟器（调试用）
       - name: List available simulators
