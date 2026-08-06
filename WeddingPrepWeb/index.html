@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="备婚总览">
+  <title>备婚总览</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="page-container"></div>
+    <div id="modal-container"></div>
+    <nav id="tab-bar">
+      <button class="tab-item active" data-tab="home">
+        <span class="tab-icon">🏠</span>
+        <span class="tab-label">首页</span>
+      </button>
+      <button class="tab-item" data-tab="timeplan">
+        <span class="tab-icon">📅</span>
+        <span class="tab-label">时间规划</span>
+      </button>
+      <button class="tab-item" data-tab="budget">
+        <span class="tab-icon">💰</span>
+        <span class="tab-label">预算管理</span>
+      </button>
+      <button class="tab-item" data-tab="vendor">
+        <span class="tab-icon">🏪</span>
+        <span class="tab-label">商家资源</span>
+      </button>
+      <button class="tab-item" data-tab="material">
+        <span class="tab-icon">📋</span>
+        <span class="tab-label">物资清单</span>
+      </button>
+      <button class="tab-item" data-tab="reminder">
+        <span class="tab-icon">🔔</span>
+        <span class="tab-label">提醒中心</span>
+      </button>
+    </nav>
+  </div>
+  <script src="data.js"></script>
+  <script src="components.js"></script>
+  <script src="pages.js"></script>
+  <script src="forms.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
