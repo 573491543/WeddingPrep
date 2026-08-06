@@ -1,0 +1,74 @@
+name: Build iOS App
+
+# 触发条件：推送到 main/master 分支、Pull Request、或手动触发
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch: # 支持手动触发
+
+jobs:
+  build:
+    name: Build on macOS
+    runs-on: macos-14 # GitHub 提供的 macOS runner（Xcode 15+, iOS 17 SDK）
+
+    steps:
+      # 1. 拉取代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 安装 XcodeGen
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # 3. 生成 Xcode 项目
+      - name: Generate Xcode Project
+        run: |
+          cd WeddingPrep
+          xcodegen generate
+          echo "Generated project files:"
+          ls -la WeddingPrep.xcodeproj/
+
+      # 4. 选择 Xcode 版本
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+        continue-on-error: true # 如果指定版本不存在，使用默认版本
+
+      # 5. 列出可用模拟器（调试用）
+      - name: List available simulators
+        run: xcrun simctl list devices available
+        continue-on-error: true
+
+      # 6. 编译项目
+      - name: Build
+        run: |
+          cd WeddingPrep
+          xcodebuild build \
+            -project WeddingPrep.xcodeproj \
+            -scheme WeddingPrep \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee build.log
+
+      # 7. 上传构建产物（可选）
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: WeddingPrep/build.log
+          retention-days: 7
+
+      # 8. 上传 .app 产物（可选）
+      - name: Upload app
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WeddingPrep-app
+          path: WeddingPrep/build/Build/Products/Debug-iphonesimulator/WeddingPrep.app
+          retention-days: 7

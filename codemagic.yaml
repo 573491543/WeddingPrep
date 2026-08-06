@@ -1,0 +1,51 @@
+# Codemagic CI/CD 配置文件
+# 文档: https://docs.codemagic.io/yaml/yaml-getting-started/
+# 免费额度: 每月 500 分钟 macOS 构建时间
+
+workflows:
+  ios-build:
+    name: WeddingPrep iOS Build
+    instance_type: mac_m2 # 使用 M2 Mac 实例
+    max_build_duration: 30 # 最长 30 分钟
+    environment:
+      # 使用 Xcode 15 (iOS 17 SDK)
+      xcode: 15.4
+      # 不需要签名证书（仅编译验证）
+      vars:
+        XCODEGEN_VERSION: "latest"
+    scripts:
+      # 1. 安装 XcodeGen
+      - name: Install XcodeGen
+        script: |
+          brew install xcodegen
+
+      # 2. 生成 Xcode 项目
+      - name: Generate Xcode Project
+        script: |
+          cd WeddingPrep
+          xcodegen generate
+
+      # 3. 编译项目（不需要签名）
+      - name: Build app
+        script: |
+          cd WeddingPrep
+          xcodebuild build \
+            -project WeddingPrep.xcodeproj \
+            -scheme WeddingPrep \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+    artifacts:
+      # 保存构建产物
+      - WeddingPrep/build/Build/Products/Debug-iphonesimulator/WeddingPrep.app
+      # 保存构建日志
+      - WeddingPrep/build.log
+    publishing:
+      # 不发布到 App Store，仅 CI 验证
+      scripts:
+        - name: Build complete
+          script: echo "Build completed successfully!"

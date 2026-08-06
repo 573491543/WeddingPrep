@@ -1,0 +1,21 @@
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+build/
+DerivedData/
+*.app
+*.ipa
+
+# XcodeGen 生成的文件（可重新生成）
+WeddingPrep/WeddingPrep.xcodeproj/
+
+# macOS
+.DS_Store
+
+# Swift Package Manager
+.build/
+Package.resolved
+
+# 临时文件
+*.log
+*.tmp
